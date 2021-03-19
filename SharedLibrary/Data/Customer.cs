@@ -14,6 +14,8 @@ namespace SharedLibrary.Data
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Contact { get; set; }
 
         public virtual ICollection<Issue> Issues { get; set; }
     }

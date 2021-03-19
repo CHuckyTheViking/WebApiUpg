@@ -26,7 +26,7 @@ namespace SharedLibrary.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Jesper\\Documents\\WebApiUpg1.mdf;Integrated Security=True;Connect Timeout=30");
+                optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Jesper\\Documents\\WebApiUpg1.mdf;Integrated Security=True;MultipleActiveResultSets=True");
             }
         }
 
@@ -38,16 +38,25 @@ namespace SharedLibrary.Data
             {
                 entity.ToTable("Customer");
 
+                entity.Property(e => e.Contact)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.Property(e => e.Phone)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Issue>(entity =>
             {
                 entity.ToTable("Issue");
 
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                //entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.Changed).HasColumnType("datetime");
 

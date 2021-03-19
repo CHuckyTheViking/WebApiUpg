@@ -23,6 +23,7 @@ namespace SharedLibrary.Data
 
         public virtual ICollection<Issue> Issues { get; set; }
 
+
         public void CreatePasswordWithHash(string password)
         {
             using (var hmac = new HMACSHA512())
