@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+
 
 #nullable disable
 
@@ -21,6 +23,9 @@ namespace SharedLibrary.Data
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
+        public string DisplayName => $"{FirstName} {LastName}";
+
+        [JsonIgnore]
         public virtual ICollection<Issue> Issues { get; set; }
 
 

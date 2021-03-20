@@ -109,20 +109,43 @@ namespace WebApiUpg.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("all")]
-        public IActionResult AllIssues([FromBody] SortIssues model)
+        [HttpGet("all")]
+        public IActionResult AllIssues()
         {
             try
             {
-                var issues = _context.Issues.ToList();
 
+                var issues = _context.Issues.Include(a => a.Customer).Include(a => a.User).ToList();
+                return new OkObjectResult(issues);
             }
             catch (Exception ex)
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-            return new OkResult();
+            
         }
+
+        //[AllowAnonymous]
+        //[HttpGet("{id}")]
+        //public IActionResult SelectedIssue(int id)
+        //{
+        //    try
+        //    {
+
+        //        var issue = _context.Issues.Where(a => a.Id == id).Include(a => a.Customer).Include(a => a.User).ToList();
+        //        return new OkObjectResult(issue);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new BadRequestObjectResult(ex.Message);
+        //    }
+
+        //}
+
+
+
+
+
 
     }
 }

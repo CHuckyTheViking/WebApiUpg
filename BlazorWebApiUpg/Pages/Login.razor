@@ -1,0 +1,54 @@
+﻿@page "/login"
+<h3>Login</h3>
+
+<EditForm id="loginForm"  Model="login" OnSubmit="OnSubmit">
+    <InputText type="text" id="email" @bind-Value="login.Email" />
+    <InputText type="password" id="password" @bind-Value="login.Password" />
+    <button class="btn btn-success" type="submit">Login</button>
+</EditForm>
+
+@*<button class="btn btn-success" type="button" onclick="" >Register?</button>
+
+<EditForm id="registerForm" @ref="regForm" style="visibility:hidden" Model="register" OnSubmit="OnSubmitRegister">
+    <InputText type="text" id="firstName" @bind-Value="register.FirstName" />
+    <InputText type="text" id="firstName" @bind-Value="register.LastName" />
+    <InputText type="text" id="email" @bind-Value="register.Email" />
+    <InputText type="password" id="password" @bind-Value="register.Password" />
+    <button class="btn btn-success" type="submit">Register</button>
+</EditForm>*@
+
+@code {
+    private SMU.LoginModel login { get; set; }
+    private SMU.RegisterModel register { get; set; }
+    //ElementReference logForm;
+    //ElementReference regForm;
+
+    protected override void OnInitialized()
+    {
+        login = new SMU.LoginModel();
+        //register = new SMU.RegisterModel();
+    }
+
+    private void registerButton()
+    {
+
+
+    }
+
+    private async Task OnSubmit()
+    {
+        var response = await Http.PostAsJsonAsync<SMU.LoginModel>("https://localhost:44374/api/Users/login", login);
+
+        await sessionStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
+
+        NavManager.NavigateTo("/");
+    }
+
+    //private async Task OnSubmitRegister()
+    //{
+
+    //}
+
+
+
+}

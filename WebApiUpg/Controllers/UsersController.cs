@@ -67,7 +67,7 @@ namespace WebApiUpg.Controllers
                     if (user.ValidatePasswordHash(model.Password))
                     {
                         var tokenHandler = new JwtSecurityTokenHandler();
-                        var expiresDate = DateTime.Now.AddDays(5);
+                        var expiresDate = DateTime.Now.AddDays(1);
 
                         var tokenDesc = new SecurityTokenDescriptor
                         {
@@ -95,12 +95,27 @@ namespace WebApiUpg.Controllers
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-            return new OkResult();
+            return new BadRequestResult();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("all")]
+        public IActionResult AllUsers()
+        {
+            try
+            {
+
+                var users = _context.Users.ToList();
+                return new OkObjectResult(users);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+
         }
 
 
 
-
-        
     }
 }

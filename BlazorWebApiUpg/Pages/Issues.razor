@@ -1,0 +1,132 @@
+﻿@page "/issues"
+<h3>Issues</h3>
+
+
+
+
+@if (issues == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenGrid Data="@issues" TItem="SD.Issue" AllowSorting="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true"
+                PageSize="4" RowSelect="RowSelect">
+
+        <Columns>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Id" Title="Issue Id"></RadzenGridColumn>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+            <RadzenGridColumn Width="300px" TItem="SD.Issue" Property="Text" Title="Text">
+                <Template Context="data">
+                    <p style="white-space:pre-wrap">@data.Text</p>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Status" Title="Status"></RadzenGridColumn>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Created" Title="Created">
+                <Template Context="data">
+                    @string.Format("{0:d}", data.Created)
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="SD.Issue" Property="User.DisplayName" Title="Created by"></RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+
+
+    if (selectedIssue != null)
+    {
+
+
+        <RadzenTabs Style="margin-top: 1rem">
+            <Tabs>
+                <RadzenTabsItem Text="Issue Details">
+                    <RadzenGrid EditMode="DataGridEditMode.Single" @ref="issueGrid" Data="@selectedIssue" TItem="SD.Issue">
+                        <Columns>
+
+                            <RadzenGridColumn Width="250px" TItem="SD.Issue" Property="Text" Title="Text">
+                                <Template Context="data">
+                                    <p style="white-space:pre-wrap">@data.Text</p>
+                                </Template>
+                            </RadzenGridColumn>
+                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Status" Title="Status"></RadzenGridColumn>
+                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Created" Title="Created">
+                                <Template Context="data">
+                                    @string.Format("{0:d}", data.Created)
+                                </Template>
+                            </RadzenGridColumn>
+                            <RadzenGridColumn Width="100px" TItem="SD.Issue" Property="User.DisplayName" Title="Created by"></RadzenGridColumn>
+                        </Columns>
+                    </RadzenGrid>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Issue Customer">
+                    <RadzenGrid Data="@selectedIssue" TItem="SD.Issue">
+                        <Columns>
+                            <RadzenGridColumn TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+                            <RadzenGridColumn TItem="SD.Issue" Property="Customer.Contact" Title="Contact"></RadzenGridColumn>
+                            <RadzenGridColumn TItem="SD.Issue" Property="Customer.Phone" Title="Phone"></RadzenGridColumn>
+                        </Columns>
+                    </RadzenGrid>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    }
+
+
+
+}
+
+
+
+
+
+
+@code {
+
+
+
+    private IEnumerable<SD.Issue> selectedIssue;
+    private SD.Issue issue { get; set; }
+    private List<SD.Issue> issues { get; set; }
+
+    private List<SD.Issue> customerss { get; set; }
+    private List<SD.Issue> userss { get; set; }
+    private IEnumerable<SD.Customer> customers;
+    private IEnumerable<SD.User> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        issue = new SD.Issue();
+        issues = new List<SD.Issue>();
+        await LoadAllAsync();
+
+    }
+
+    private async Task LoadAllAsync()
+    {
+        issues = await Http.GetFromJsonAsync<List<SD.Issue>>("https://localhost:44374/api/Issues/all");
+        customers = await Http.GetFromJsonAsync<IEnumerable<SD.Customer>>("https://localhost:44374/api/Customers/all");
+        users = await Http.GetFromJsonAsync<IEnumerable<SD.User>>("https://localhost:44374/api/Users/all");
+
+    }
+
+    void RowSelect(SD.Issue issue)
+    {
+        StateHasChanged();
+        selectedIssue = issues.Where(a => a.Id == issue.Id);
+    }
+
+    RadzenGrid<SD.Issue> issueGrid;
+
+
+
+
+    async Task OnCreateRow(SD.Issue issue)
+    {
+        issue.Created = DateTime.Now;
+        issue.UserId = 4;
+        await Http.PostAsJsonAsync<SD.Issue>("https://localhost:44374/api/Issues/add", issue);
+
+    }
+
+
+}

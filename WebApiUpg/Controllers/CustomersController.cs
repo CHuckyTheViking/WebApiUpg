@@ -46,5 +46,22 @@ namespace WebApiUpg.Controllers
             return new OkResult();
         }
 
+        [AllowAnonymous]
+        [HttpGet("all")]
+        public IActionResult AllCustomers()
+        {
+            try
+            {
+
+                var customers = _context.Customers.ToList();
+                return new OkObjectResult(customers);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+
+        }
+
     }
 }

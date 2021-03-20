@@ -1,0 +1,20 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components.WebAssembly.Http
+@using Microsoft.JSInterop
+@using BlazorWebApiUpg
+@using BlazorWebApiUpg.Shared
+@using SharedLibrary
+@using SMU = SharedLibrary.Models.User
+@using SD = SharedLibrary.Data
+@using SMI = SharedLibrary.Models.Issue
+@using Newtonsoft.Json
+@using Radzen
+@using Radzen.Blazor
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject NavigationManager NavManager
+@inject HttpClient Http
