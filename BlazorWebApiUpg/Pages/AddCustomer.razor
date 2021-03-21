@@ -1,30 +1,30 @@
 ﻿@page "/add/customer"
 <Authentication />
-<h3>Add Issue</h3>
+<h3>Add Customer</h3>
 
 <RadzenTemplateForm Data="@customer" Submit="@((SD.Customer customer) => { Submit(customer).GetAwaiter(); })">
-    <RadzenFieldset Text="Add Issue">
+    <RadzenFieldset Text="Add Customer">
         <div class="row">
 
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Customer name" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
 
                 <RadzenTextBox @bind-Value="customer.CustomerName" Placeholder="Name" style="width: 100%;" Name="Name">
                 </RadzenTextBox>
             </div>
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Customer Phone" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenTextBox @bind-Value="customer.Phone" Placeholder="Phone" style="width: 100%;" Name="Phone">
                 </RadzenTextBox>
             </div>
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Customer Contact" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenTextBox @bind-Value="customer.Contact" Placeholder="ex. John Svensson" style="width: 100%;" Name="Contact">
                 </RadzenTextBox>
             </div>

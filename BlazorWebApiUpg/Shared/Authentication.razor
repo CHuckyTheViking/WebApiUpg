@@ -6,7 +6,7 @@
     {
         try
         {
-            accessToken = await localStorage.GetItemAsync<string>("authenticated");
+            accessToken = await sessionStorage.GetItemAsync<string>("authenticated");
 
             if (accessToken != null)
             {

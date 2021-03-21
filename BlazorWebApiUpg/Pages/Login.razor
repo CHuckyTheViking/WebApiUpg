@@ -99,7 +99,7 @@
     {
         var response = await Http.PostAsJsonAsync<SMU.LoginModel>("https://localhost:44374/api/Users/login", user);
 
-        await localStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
+        await sessionStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
         
 
         NavManager.NavigateTo("/");

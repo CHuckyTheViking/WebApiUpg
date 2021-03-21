@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace BlazorWebApiUpg
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 
-            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddBlazoredSessionStorage();
 
             await builder.Build().RunAsync();
         }
