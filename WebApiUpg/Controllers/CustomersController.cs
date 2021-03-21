@@ -31,7 +31,7 @@ namespace WebApiUpg.Controllers
             {
                 var customer = new Customer
                 {
-                    Name = model.Name,
+                    CustomerName = model.CustomerName,
                     Phone = model.Phone,
                     Contact = model.Contact
                 };
@@ -60,7 +60,6 @@ namespace WebApiUpg.Controllers
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-
         }
 
     }

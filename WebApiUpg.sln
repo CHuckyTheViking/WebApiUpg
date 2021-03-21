@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiUpg", "WebApiUpg\WebA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedLibrary", "SharedLibrary\SharedLibrary.csproj", "{8AD4A499-DBB0-44CB-BA9E-245F0655A262}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebApiUpg", "BlazorWebApiUpg\BlazorWebApiUpg.csproj", "{59B40088-4CE7-4228-8C83-1D1CED1EF717}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebApiUpg", "BlazorWebApiUpg\BlazorWebApiUpg.csproj", "{59B40088-4CE7-4228-8C83-1D1CED1EF717}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

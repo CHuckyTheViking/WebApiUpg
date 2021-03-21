@@ -8,7 +8,7 @@ namespace SharedLibrary.Models.Issue
     {
         public string CustomerName { get; set; }
         public int UserId { get; set; }
-        public string Status { get; set; }
+        public int StatusId { get; set; }
 
 
     }

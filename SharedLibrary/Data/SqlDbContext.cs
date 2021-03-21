@@ -19,6 +19,7 @@ namespace SharedLibrary.Data
 
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Issue> Issues { get; set; }
+        public virtual DbSet<Status> Statuses { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -26,7 +27,7 @@ namespace SharedLibrary.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Jesper\\Documents\\WebApiUpg1.mdf;Integrated Security=True;MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Jesper\\Documents\\WebApiUpgDbFirst.mdf;Integrated Security=True;Connect Timeout=30");
             }
         }
 
@@ -42,7 +43,7 @@ namespace SharedLibrary.Data
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.CustomerName)
                     .IsRequired()
                     .HasMaxLength(50);
 
@@ -56,18 +57,11 @@ namespace SharedLibrary.Data
             {
                 entity.ToTable("Issue");
 
-                //entity.Property(e => e.Id).ValueGeneratedNever();
-
                 entity.Property(e => e.Changed).HasColumnType("datetime");
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.Text)
+                entity.Property(e => e.Information)
                     .IsRequired()
                     .HasMaxLength(200);
 
@@ -75,19 +69,32 @@ namespace SharedLibrary.Data
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Issue_Customer");
+                    .HasConstraintName("FK__Issue__CustomerI__4CA06362");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Issues)
+                    .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Issue__StatusId__4E88ABD4");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Issues)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Issue_User");
+                    .HasConstraintName("FK__Issue__UserId__4D94879B");
+            });
+
+            modelBuilder.Entity<Status>(entity =>
+            {
+                entity.ToTable("Status");
+
+                entity.Property(e => e.StatusText)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("User");
-
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(100)

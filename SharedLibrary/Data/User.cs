@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-
 #nullable disable
 
 namespace SharedLibrary.Data
@@ -27,6 +26,8 @@ namespace SharedLibrary.Data
 
         [JsonIgnore]
         public virtual ICollection<Issue> Issues { get; set; }
+
+        
 
 
         public void CreatePasswordWithHash(string password)

@@ -6,14 +6,25 @@
         try
         {
             accessToken = await sessionStorage.GetItemAsync<string>("authenticated");
+
+            if (accessToken != null)
+                Console.WriteLine("inte null");
+            //Http.DefaultRequestHeaders.Add("Authorization", String.Format($"Bearer " + accessToken));
+
+
+            if (accessToken == null)
+                Console.WriteLine("null");
+            //NavManager.NavigateTo("/login");
+
+
+
+
+
         }
         catch
         {
-            
-        }
 
-        if (accessToken == null)
-            NavManager.NavigateTo("/login");
+        }
 
 
 

@@ -1,80 +1,77 @@
-﻿@page "/add"
+﻿@page "/add/issue"
+<Authentication />
 <h3>Add Issue</h3>
 
-<RadzenFieldset Text="Add Issue">
-    <div class="row">
-        <div class="col-md-4 align-items-center d-flex">
-            <RadzenLabel Text="Information" />
-        </div>
-        <div class="col-md-8">
-            <RadzenTextArea style="width: 100%;" Name="Information" />
+<RadzenTemplateForm Data="@issue" Submit="@((SD.Issue issue) => { Submit(issue); })">
+    <RadzenFieldset Text="Add Issue">
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Information" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextArea style="width: 100%;" @bind-Value="issue.Information" Name="Information" />
+            </div>
+
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Customer" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown @bind-Value="issue.CustomerId" Placeholder="Customer" Data="@customers" style="width: 100%;" TextProperty="CustomerName" ValueProperty="Id" Name="Customer">
+                </RadzenDropDown>
+            </div>
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Created By" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown @bind-Value="issue.UserId" Placeholder="User" Data="@users" style="width: 100%;" TextProperty="DisplayName" ValueProperty="Id" Name="Created By">
+                </RadzenDropDown>
+            </div>
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Status" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown @bind-Value="issue.StatusId" Placeholder="Status" Data="@statuses" style="width: 100%;" TextProperty="StatusText" ValueProperty="Id" Name="Status">
+                </RadzenDropDown>
+            </div>
+
+
         </div>
 
-        <div class="col-md-4 align-items-center d-flex">
-            <RadzenLabel Text="Customer" />
+    </RadzenFieldset>
+    <div class="row justify-content-center">
+        <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+            <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Add" />
         </div>
-        <div class="col-md-8">
-            <RadzenDropDown @bind-Value="issue.CustomerId" Placeholder="Customer" Data="@customers" style="width: 100%;" TextProperty="Name" ValueProperty="Id" Name="Customer">
-            </RadzenDropDown>
-        </div>
-        <div class="col-md-4 align-items-center d-flex">
-            <RadzenLabel Text="Created By" />
-        </div>
-        <div class="col-md-8">
-            <RadzenDropDown @bind-Value="issue.UserId" Placeholder="User" Data="@users" style="width: 100%;" TextProperty="DisplayName" ValueProperty="Id" Name="Created By">
-            </RadzenDropDown>
-        </div>
-        <div class="col-md-4 align-items-center d-flex">
-            <RadzenLabel Text="Status" />
-        </div>
-        <div class="col-md-8">
-            <RadzenDropDown @bind-Value="issue.Status" Placeholder="Status" Data="@status" style="width: 100%;" TextProperty="Status" ValueProperty="Status" Name="Status">
-            </RadzenDropDown>
-        </div>
-
-
     </div>
-    
-</RadzenFieldset>
+</RadzenTemplateForm>
 
 
+    @code {
+        private SD.Issue issue { get; set; }
+        private IEnumerable<SD.Customer> customers;
+        private IEnumerable<SD.User> users;
+        private IEnumerable<SD.Status> statuses;
 
-@code {
-    private SD.Issue issue { get; set; }
-    private IEnumerable<SD.Customer> customers;
-    private IEnumerable<SD.User> users;
-    private List<SD.Issue> status;
+        protected override async Task OnInitializedAsync()
+        {
+            issue = new SD.Issue();
+            await LoadAllAsync();
 
-    protected override async Task OnInitializedAsync()
-    {
-        issue = new SD.Issue();
-        status = new List<SD.Issue>();
-        await LoadAllAsync();
+        }
+
+        private async Task LoadAllAsync()
+        {
+
+            customers = await Http.GetFromJsonAsync<IEnumerable<SD.Customer>>("https://localhost:44374/api/Customers/all");
+            users = await Http.GetFromJsonAsync<IEnumerable<SD.User>>("https://localhost:44374/api/Users/all");
+            statuses = await Http.GetFromJsonAsync<IEnumerable<SD.Status>>("https://localhost:44374/api/Issues/statuses");
+
+        }
+
+        void Submit(SD.Issue issue)
+        {
+            Http.PostAsJsonAsync<SD.Issue>("https://localhost:44374/api/Issues/add", issue);            
+        }
+
 
     }
-
-    private async Task LoadAllAsync()
-    {
-
-        customers = await Http.GetFromJsonAsync<IEnumerable<SD.Customer>>("https://localhost:44374/api/Customers/all");
-        users = await Http.GetFromJsonAsync<IEnumerable<SD.User>>("https://localhost:44374/api/Users/all");
-
-        var status1 = new SD.Issue
-        {
-            Status = "Not Started"
-        };
-        var status2 = new SD.Issue
-        {
-            Status = "Started"
-        };
-        var status3 = new SD.Issue
-        {
-            Status = "Finished"
-        };
-
-        status.Add(status1);
-        status.Add(status2);
-        status.Add(status3);
-    }
-
-}

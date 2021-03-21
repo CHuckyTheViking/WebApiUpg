@@ -28,14 +28,34 @@ namespace WebApiUpg.Controllers
         {
             try
             {
+                var status = await _context.Statuses.FirstOrDefaultAsync();
+                if (status == null)
+                {
+                    var stat1 = new Status
+                    {
+                        StatusText = "Not Started"
+                    };
+                    _context.Statuses.Add(stat1);
+                    var stat2 = new Status
+                    {
+                        StatusText = "Started"
+                    };
+                    _context.Statuses.Add(stat2);
+                    var stat3 = new Status
+                    {
+                        StatusText = "Finished"
+                    };
+                    _context.Statuses.Add(stat3);
+                    await _context.SaveChangesAsync();
+                }
+
                 var issue = new Issue
                 {
                     Created = DateTime.Now,
-                    Status = model.Status,
-                    Text = model.Text,
-                    
+                    Information = model.Information,
+                    Status = _context.Statuses.Where(a => a.Id == model.StatusId).FirstOrDefault(),
                     Customer = _context.Customers.Where(a => a.Id == model.CustomerId).FirstOrDefault(),
-                    User = _context.Users.Where(a => a.Id == model.UserId).FirstOrDefault() 
+                    User = _context.Users.Where(a => a.Id == model.UserId).FirstOrDefault()
                 };
 
                 _context.Issues.Add(issue);
@@ -54,12 +74,12 @@ namespace WebApiUpg.Controllers
         {
             try
             {
-                var customer = await _context.Customers.FirstOrDefaultAsync(a => a.Name == model.CustomerName);
+                var customer = await _context.Customers.FirstOrDefaultAsync(a => a.CustomerName == model.CustomerName);
 
-                if(customer != null)
+                if (customer != null)
                 {
                     var issues = _context.Issues.Where(a => a.CustomerId == customer.Id).ToList();
-                    
+
                 }
 
             }
@@ -98,8 +118,72 @@ namespace WebApiUpg.Controllers
         {
             try
             {
-                var issues = _context.Issues.Where(a => a.Status == model.Status).ToList();
+                var issues = _context.Issues.Where(a => a.StatusId == model.StatusId).ToList();
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+            return new OkResult();
+        }
 
+
+        [AllowAnonymous]
+        [HttpGet("statuses")]
+        public IActionResult AllStatuses()
+        {
+            try
+            {
+                var status = _context.Statuses.ToList();
+                return new OkObjectResult(status);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("all")]
+        public IActionResult AllIssues()
+        {
+            try
+            {
+
+                var issues = _context.Issues.Include(a => a.Customer).Include(a => a.User).Include(a=> a.Status).ToList();
+                return new OkObjectResult(issues);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("update")]
+        public IActionResult UpdateIssue(Issue issue)
+        {
+            try
+            {
+                
+                
+                var changeIssue = _context.Issues.FirstOrDefaultAsync(a => a.Id == issue.Id).Result;
+
+                if (changeIssue != null)
+                {
+                    changeIssue.Changed = DateTime.Now;
+                    changeIssue.Information = issue.Information;
+                    changeIssue.StatusId = issue.StatusId;
+                    changeIssue.CustomerId = issue.CustomerId;
+                    changeIssue.UserId = issue.UserId;
+
+                    _context.Issues.Update(changeIssue);
+                    _context.SaveChanges();
+
+
+                }
+                
+                
             }
             catch (Exception ex)
             {
@@ -109,38 +193,21 @@ namespace WebApiUpg.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("all")]
-        public IActionResult AllIssues()
+        [HttpGet("id")]
+        public IActionResult SelectedIssue(int id)
         {
             try
             {
 
-                var issues = _context.Issues.Include(a => a.Customer).Include(a => a.User).ToList();
-                return new OkObjectResult(issues);
+                var issue = _context.Issues.Where(a => a.Id == id).Include(a => a.Customer).Include(a => a.User).ToList();
+                return new OkObjectResult(issue);
             }
             catch (Exception ex)
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-            
+
         }
-
-        //[AllowAnonymous]
-        //[HttpGet("{id}")]
-        //public IActionResult SelectedIssue(int id)
-        //{
-        //    try
-        //    {
-
-        //        var issue = _context.Issues.Where(a => a.Id == id).Include(a => a.Customer).Include(a => a.User).ToList();
-        //        return new OkObjectResult(issue);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return new BadRequestObjectResult(ex.Message);
-        //    }
-
-        //}
 
 
 

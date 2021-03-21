@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SharedLibrary.Data;
 
 namespace SharedLibrary.Models.Issue
 {
@@ -9,12 +8,10 @@ namespace SharedLibrary.Models.Issue
     {
 
         public DateTime Created { get; set; }
-        public string Status { get; set; }
-        public string Text { get; set; }
+        public string Information { get; set; }
         public int CustomerId { get; set; }
         public int UserId { get; set; }
+        public int StatusId { get; set; }
 
-        //public Data.Customer customer { get; set; }
-        //public Data.User user { get; set; }
     }
 }

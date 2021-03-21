@@ -10,14 +10,13 @@ namespace SharedLibrary.Data
         public int Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Changed { get; set; }
-        public string Status { get; set; }
-        public string Text { get; set; }
+        public string Information { get; set; }
         public int CustomerId { get; set; }
         public int UserId { get; set; }
+        public int StatusId { get; set; }
 
         public virtual Customer Customer { get; set; }
+        public virtual Status Status { get; set; }
         public virtual User User { get; set; }
-
-
     }
 }

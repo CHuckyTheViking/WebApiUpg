@@ -62,7 +62,7 @@ namespace WebApiUpg.Controllers
             {
                 var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
 
-                if(user != null)
+                if (user != null)
                 {
                     if (user.ValidatePasswordHash(model.Password))
                     {
@@ -112,7 +112,6 @@ namespace WebApiUpg.Controllers
             {
                 return new BadRequestObjectResult(ex.Message);
             }
-
         }
 
 

@@ -44,6 +44,8 @@ namespace WebApiUpg
             services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
             services.AddCors();
 
+            
+
             services.AddAuthentication(a =>
             {
                 a.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

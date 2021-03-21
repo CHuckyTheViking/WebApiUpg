@@ -1,7 +1,6 @@
 ﻿@page "/issues"
+<Authentication />
 <h3>Issues</h3>
-
-
 
 
 @if (issues == null)
@@ -15,13 +14,13 @@ else
 
         <Columns>
             <RadzenGridColumn  TItem="SD.Issue" Property="Id" Title="Issue Id"></RadzenGridColumn>
-            <RadzenGridColumn  TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Customer.CustomerName" Title="Customer"></RadzenGridColumn>
             <RadzenGridColumn Width="300px" TItem="SD.Issue" Property="Text" Title="Text">
                 <Template Context="data">
-                    <p style="white-space:pre-wrap">@data.Text</p>
+                    <p style="white-space:pre-wrap">@data.Information</p>
                 </Template>
             </RadzenGridColumn>
-            <RadzenGridColumn  TItem="SD.Issue" Property="Status" Title="Status"></RadzenGridColumn>
+            <RadzenGridColumn  TItem="SD.Issue" Property="Status.StatusText" Title="Status"></RadzenGridColumn>
             <RadzenGridColumn  TItem="SD.Issue" Property="Created" Title="Created">
                 <Template Context="data">
                     @string.Format("{0:d}", data.Created)
@@ -42,26 +41,56 @@ else
                     <RadzenGrid EditMode="DataGridEditMode.Single" @ref="issueGrid" Data="@selectedIssue" TItem="SD.Issue">
                         <Columns>
 
-                            <RadzenGridColumn Width="250px" TItem="SD.Issue" Property="Text" Title="Text">
+                            <RadzenGridColumn Width="250px" TItem="SD.Issue" Property="Information" Title="Text">
                                 <Template Context="data">
-                                    <p style="white-space:pre-wrap">@data.Text</p>
+                                    <p style="white-space:pre-wrap">@data.Information</p>
                                 </Template>
+                                <EditTemplate Context="selectedIssue">
+                                    <RadzenTextArea @bind-Value="selectedIssue.Information" Style="width:100%" />
+                                </EditTemplate>
                             </RadzenGridColumn>
-                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Status" Title="Status"></RadzenGridColumn>
-                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+                            <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Status.StatusText" Title="Status">
+                                <EditTemplate Context="selectedIssue">
+                                    <RadzenDropDown  @bind-Value="selectedIssue.StatusId" Data="@statuses" style="width: 100%;" TextProperty="StatusText" ValueProperty="Id">
+                                    </RadzenDropDown>
+                                </EditTemplate>
+                            </RadzenGridColumn>
+                            <RadzenGridColumn Context="data" Width="60px" TItem="SD.Issue" Property="Customer.CustomerName" Title="Customer">
+                                <EditTemplate Context="selectedIssue">
+                                    <RadzenDropDown @bind-Value="selectedIssue.CustomerId" Data="@customers" style="width: 100%;" TextProperty="CustomerName" ValueProperty="Id">
+                                    </RadzenDropDown>
+                                </EditTemplate>
+                            </RadzenGridColumn>
                             <RadzenGridColumn Width="60px" TItem="SD.Issue" Property="Created" Title="Created">
                                 <Template Context="data">
                                     @string.Format("{0:d}", data.Created)
                                 </Template>
                             </RadzenGridColumn>
-                            <RadzenGridColumn Width="100px" TItem="SD.Issue" Property="User.DisplayName" Title="Created by"></RadzenGridColumn>
+                            <RadzenGridColumn Width="100px" TItem="SD.Issue" Property="User.DisplayName" Title="Created by">
+                                <EditTemplate Context="selectedIssue">
+                                    <RadzenDropDown @bind-Value="selectedIssue.UserId" Data="@users" style="width: 100%;" TextProperty="DisplayName" ValueProperty="Id">
+                                    </RadzenDropDown>
+                                </EditTemplate>
+                            </RadzenGridColumn>
+                            <RadzenGridColumn TItem="SD.Issue" Context="sampleBlazorModelsSampleOrder" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                                <Template Context="selectedIssue">
+                                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(selectedIssue))">
+                                    </RadzenButton>
+                                </Template>
+                                <EditTemplate Context="selectedIssue">
+                                    <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(selectedIssue))">
+                                    </RadzenButton>
+                                    <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(selectedIssue))">
+                                    </RadzenButton>
+                                </EditTemplate>
+                            </RadzenGridColumn>
                         </Columns>
                     </RadzenGrid>
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="Issue Customer">
                     <RadzenGrid Data="@selectedIssue" TItem="SD.Issue">
                         <Columns>
-                            <RadzenGridColumn TItem="SD.Issue" Property="Customer.Name" Title="Customer"></RadzenGridColumn>
+                            <RadzenGridColumn TItem="SD.Issue" Property="Customer.CustomerName" Title="Customer"></RadzenGridColumn>
                             <RadzenGridColumn TItem="SD.Issue" Property="Customer.Contact" Title="Contact"></RadzenGridColumn>
                             <RadzenGridColumn TItem="SD.Issue" Property="Customer.Phone" Title="Phone"></RadzenGridColumn>
                         </Columns>
@@ -87,11 +116,10 @@ else
     private IEnumerable<SD.Issue> selectedIssue;
     private SD.Issue issue { get; set; }
     private List<SD.Issue> issues { get; set; }
-
-    private List<SD.Issue> customerss { get; set; }
-    private List<SD.Issue> userss { get; set; }
+    private IEnumerable<SD.Status> statuses;
     private IEnumerable<SD.Customer> customers;
     private IEnumerable<SD.User> users;
+    RadzenGrid<SD.Issue> issueGrid;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,28 +131,46 @@ else
 
     private async Task LoadAllAsync()
     {
+        
         issues = await Http.GetFromJsonAsync<List<SD.Issue>>("https://localhost:44374/api/Issues/all");
         customers = await Http.GetFromJsonAsync<IEnumerable<SD.Customer>>("https://localhost:44374/api/Customers/all");
         users = await Http.GetFromJsonAsync<IEnumerable<SD.User>>("https://localhost:44374/api/Users/all");
+        statuses = await Http.GetFromJsonAsync<IEnumerable<SD.Status>>("https://localhost:44374/api/Issues/statuses");
 
     }
+
 
     void RowSelect(SD.Issue issue)
     {
-        StateHasChanged();
         selectedIssue = issues.Where(a => a.Id == issue.Id);
     }
-
-    RadzenGrid<SD.Issue> issueGrid;
-
-
-
-
-    async Task OnCreateRow(SD.Issue issue)
+    async Task LoadIssues()
     {
-        issue.Created = DateTime.Now;
-        issue.UserId = 4;
-        await Http.PostAsJsonAsync<SD.Issue>("https://localhost:44374/api/Issues/add", issue);
+        issues = new List<SD.Issue>();
+        issues = await Http.GetFromJsonAsync<List<SD.Issue>>("https://localhost:44374/api/Issues/all");
+        StateHasChanged();
+    }
+
+
+    void EditRow(SD.Issue issue)
+    {
+        issueGrid.EditRow(issue);
+    }
+
+    async Task SaveRow(SD.Issue issue)
+    {
+        issueGrid.UpdateRow(issue).GetAwaiter();
+
+        await Http.PostAsJsonAsync<SD.Issue>("https://localhost:44374/api/Issues/update", issue);
+
+        LoadIssues().GetAwaiter();
+
+        selectedIssue = null;
+    }
+
+    void CancelEdit(SD.Issue issue)
+    {
+        issueGrid.CancelEditRow(issue);
 
     }
 

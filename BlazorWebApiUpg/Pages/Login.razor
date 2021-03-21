@@ -1,53 +1,117 @@
 ﻿@page "/login"
 <h3>Login</h3>
 
-<EditForm id="loginForm"  Model="login" OnSubmit="OnSubmit">
-    <InputText type="text" id="email" @bind-Value="login.Email" />
-    <InputText type="password" id="password" @bind-Value="login.Password" />
-    <button class="btn btn-success" type="submit">Login</button>
-</EditForm>
+<RadzenTemplateForm Data="@login" Submit="@((SMU.LoginModel user) => { SubmitLogin(user); })">
+    <RadzenFieldset>
 
-@*<button class="btn btn-success" type="button" onclick="" >Register?</button>
+        <div class="col-md-4 align-items-center d-flex mb-1">
+            <RadzenLabel Text="E-mail" />
+        </div>
+        <div class="col-md-8 mb-2">
 
-<EditForm id="registerForm" @ref="regForm" style="visibility:hidden" Model="register" OnSubmit="OnSubmitRegister">
-    <InputText type="text" id="firstName" @bind-Value="register.FirstName" />
-    <InputText type="text" id="firstName" @bind-Value="register.LastName" />
-    <InputText type="text" id="email" @bind-Value="register.Email" />
-    <InputText type="password" id="password" @bind-Value="register.Password" />
-    <button class="btn btn-success" type="submit">Register</button>
-</EditForm>*@
+            <RadzenTextBox @bind-Value="login.Email" Placeholder="E-mail" Name="E-mail">
+            </RadzenTextBox>
+        </div>
+
+        <div class="col-md-4 align-items-center d-flex mb-1">
+            <RadzenLabel Text="Password" />
+        </div>
+        <div class="col-md-8 mb-2">
+            <RadzenPassword @bind-Value="login.Password" Placeholder="Password" Name="Password"></RadzenPassword>
+
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-12 d-flex align-items-end justify-content-center">
+                <RadzenButton ButtonType="ButtonType.Submit" Icon="login" Text="Login" />
+            </div>
+        </div>
+
+    </RadzenFieldset>
+    
+</RadzenTemplateForm>
+
+<h4 class="m-5"> Register down below</h4>
+
+
+<RadzenTemplateForm  Data="@register" Submit="@((SMU.RegisterModel user) => { SubmitRegister(user); })">
+    <RadzenFieldset Text="Register">
+        <div class="row">
+
+            <div class="col-md-4 align-items-center d-flex mb-1">
+                <RadzenLabel Text="First name" />
+            </div>
+            <div class="col-md-8 mb-2">
+
+                <RadzenTextBox @bind-Value="register.FirstName" Placeholder="First name" Name="First Name">
+                </RadzenTextBox>
+            </div>
+
+            <div class="col-md-4 align-items-center d-flex mb-1">
+                <RadzenLabel Text="Last name" />
+            </div>
+            <div class="col-md-8 mb-2">
+                <RadzenTextBox @bind-Value="register.LastName" Placeholder="Last name" Name="Last Name">
+                </RadzenTextBox>
+            </div>
+
+            <div class="col-md-4 align-items-center d-flex mb-1">
+                <RadzenLabel Text="E-mail" />
+            </div>
+            <div class="col-md-8 mb-2">
+                <RadzenTextBox @bind-Value="register.Email" Placeholder="E-mail" Name="E-mail">
+                </RadzenTextBox>
+            </div>
+
+            <div class="col-md-4 align-items-center d-flex mb-1">
+                <RadzenLabel Text="Password" />
+            </div>
+            <div class="col-md-8 mb-2">
+                <RadzenPassword @bind-Value="register.Password" Placeholder="Password" Name="Password"></RadzenPassword>
+
+            </div>
+
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Register" />
+            </div>
+        </div>
+
+    </RadzenFieldset>
+    
+</RadzenTemplateForm>
 
 @code {
     private SMU.LoginModel login { get; set; }
     private SMU.RegisterModel register { get; set; }
-    //ElementReference logForm;
-    //ElementReference regForm;
+    EditForm regForm { get; set; }
+
+    private bool regFormShow { get; set; } = false;
 
     protected override void OnInitialized()
     {
         login = new SMU.LoginModel();
-        //register = new SMU.RegisterModel();
+        register = new SMU.RegisterModel();
     }
 
-    private void registerButton()
+
+
+    private async Task SubmitLogin(SMU.LoginModel user)
     {
-
-
-    }
-
-    private async Task OnSubmit()
-    {
-        var response = await Http.PostAsJsonAsync<SMU.LoginModel>("https://localhost:44374/api/Users/login", login);
+        var response = await Http.PostAsJsonAsync<SMU.LoginModel>("https://localhost:44374/api/Users/login", user);
 
         await sessionStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
+        
 
         NavManager.NavigateTo("/");
     }
 
-    //private async Task OnSubmitRegister()
-    //{
-
-    //}
+    async Task SubmitRegister(SMU.RegisterModel user)
+    {
+        await Http.PostAsJsonAsync<SMU.RegisterModel>("https://localhost:44374/api/Users/register", user);
+    }
 
 
 

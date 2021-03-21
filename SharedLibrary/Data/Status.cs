@@ -6,17 +6,15 @@ using System.Collections.Generic;
 
 namespace SharedLibrary.Data
 {
-    public partial class Customer
+    public partial class Status
     {
-        public Customer()
+        public Status()
         {
             Issues = new HashSet<Issue>();
         }
 
         public int Id { get; set; }
-        public string CustomerName { get; set; }
-        public string Phone { get; set; }
-        public string Contact { get; set; }
+        public string StatusText { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Issue> Issues { get; set; }
