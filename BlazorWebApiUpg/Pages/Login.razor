@@ -86,9 +86,6 @@
 @code {
     private SMU.LoginModel login { get; set; }
     private SMU.RegisterModel register { get; set; }
-    EditForm regForm { get; set; }
-
-    private bool regFormShow { get; set; } = false;
 
     protected override void OnInitialized()
     {
@@ -102,7 +99,7 @@
     {
         var response = await Http.PostAsJsonAsync<SMU.LoginModel>("https://localhost:44374/api/Users/login", user);
 
-        await sessionStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
+        await localStorage.SetItemAsync<string>("authenticated", await response.Content.ReadAsStringAsync());
         
 
         NavManager.NavigateTo("/");

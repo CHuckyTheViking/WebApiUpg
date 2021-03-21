@@ -22,7 +22,7 @@ namespace WebApiUpg.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddIssue([FromBody] AddIssueModel model)
         {
@@ -68,7 +68,7 @@ namespace WebApiUpg.Controllers
             return new OkResult();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("customer")]
         public async Task<IActionResult> SortByCustomer([FromBody] SortIssues model)
         {
@@ -91,7 +91,7 @@ namespace WebApiUpg.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("user")]
         public async Task<IActionResult> SortByUser([FromBody] SortIssues model)
         {
@@ -112,7 +112,7 @@ namespace WebApiUpg.Controllers
             return new OkResult();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("status")]
         public IActionResult SortByStatus([FromBody] SortIssues model)
         {
@@ -128,7 +128,7 @@ namespace WebApiUpg.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("statuses")]
         public IActionResult AllStatuses()
         {
@@ -159,7 +159,7 @@ namespace WebApiUpg.Controllers
             }
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("update")]
         public IActionResult UpdateIssue(Issue issue)
         {
@@ -192,7 +192,7 @@ namespace WebApiUpg.Controllers
             return new OkResult();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("id")]
         public IActionResult SelectedIssue(int id)
         {

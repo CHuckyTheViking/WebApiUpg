@@ -5,31 +5,31 @@
 <RadzenTemplateForm Data="@issue" Submit="@((SD.Issue issue) => { Submit(issue); })">
     <RadzenFieldset Text="Add Issue">
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Information" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenTextArea style="width: 100%;" @bind-Value="issue.Information" Name="Information" />
             </div>
 
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Customer" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenDropDown @bind-Value="issue.CustomerId" Placeholder="Customer" Data="@customers" style="width: 100%;" TextProperty="CustomerName" ValueProperty="Id" Name="Customer">
                 </RadzenDropDown>
             </div>
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Created By" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenDropDown @bind-Value="issue.UserId" Placeholder="User" Data="@users" style="width: 100%;" TextProperty="DisplayName" ValueProperty="Id" Name="Created By">
                 </RadzenDropDown>
             </div>
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-center d-flex mb-1">
                 <RadzenLabel Text="Status" />
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 mb-2">
                 <RadzenDropDown @bind-Value="issue.StatusId" Placeholder="Status" Data="@statuses" style="width: 100%;" TextProperty="StatusText" ValueProperty="Id" Name="Status">
                 </RadzenDropDown>
             </div>

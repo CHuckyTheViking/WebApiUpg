@@ -1,24 +1,24 @@
 ﻿@code {
     private string accessToken { get; set; }
 
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            accessToken = await sessionStorage.GetItemAsync<string>("authenticated");
+            accessToken = await localStorage.GetItemAsync<string>("authenticated");
 
             if (accessToken != null)
-                Console.WriteLine("inte null");
-            //Http.DefaultRequestHeaders.Add("Authorization", String.Format($"Bearer " + accessToken));
+            {
+                Http.DefaultRequestHeaders.Add("Authorization", String.Format($"Bearer " + accessToken));
+            }
+
 
 
             if (accessToken == null)
-                Console.WriteLine("null");
-            //NavManager.NavigateTo("/login");
-
-
-
-
+            {
+                NavManager.NavigateTo("/login");
+            }
 
         }
         catch

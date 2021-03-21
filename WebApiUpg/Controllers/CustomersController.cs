@@ -23,7 +23,7 @@ namespace WebApiUpg.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddCustomer([FromBody] AddCustomerModel model)
         {
@@ -46,7 +46,7 @@ namespace WebApiUpg.Controllers
             return new OkResult();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("all")]
         public IActionResult AllCustomers()
         {

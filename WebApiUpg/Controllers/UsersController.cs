@@ -98,7 +98,7 @@ namespace WebApiUpg.Controllers
             return new BadRequestResult();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("all")]
         public IActionResult AllUsers()
         {
