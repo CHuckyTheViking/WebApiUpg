@@ -28,26 +28,6 @@ namespace WebApiUpg.Controllers
         {
             try
             {
-                var status = await _context.Statuses.FirstOrDefaultAsync();
-                if (status == null)
-                {
-                    var stat1 = new Status
-                    {
-                        StatusText = "Not Started"
-                    };
-                    _context.Statuses.Add(stat1);
-                    var stat2 = new Status
-                    {
-                        StatusText = "Started"
-                    };
-                    _context.Statuses.Add(stat2);
-                    var stat3 = new Status
-                    {
-                        StatusText = "Finished"
-                    };
-                    _context.Statuses.Add(stat3);
-                    await _context.SaveChangesAsync();
-                }
 
                 var issue = new Issue
                 {

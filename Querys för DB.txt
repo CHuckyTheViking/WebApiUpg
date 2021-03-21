@@ -1,3 +1,4 @@
+
 CREATE TABLE Issue(
  Id INT IDENTITY (1, 1) PRIMARY KEY NOT NULL,
  Created DATETIME NOT NULL,
@@ -38,4 +39,12 @@ GO
 ALTER TABLE Issue
 ADD FOREIGN KEY (StatusId) REFERENCES Status(Id);
 GO
+INSERT INTO Status(StatusText)
+VALUES ('Not Started')
+GO
+INSERT INTO Status(StatusText)
+VALUES ('Started')
+GO
+INSERT INTO Status(StatusText)
+VALUES ('Finished')
 
